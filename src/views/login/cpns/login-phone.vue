@@ -6,7 +6,7 @@
       </el-form-item>
       <el-form-item label="验证码" prop="vCode">
         <div class="get-code">
-          <el-input v-model="phone.vCode"></el-input>
+          <el-input v-model="phone.vCode" show-password></el-input>
           <el-button type="primary" class="get-code-btn">获取验证码</el-button>
         </div>
       </el-form-item>
@@ -16,18 +16,23 @@
 
 <script>
 import { rules } from '../config/phone-config'
-import { defineComponent, reactive, ref } from 'vue'
-export default defineComponent({
+import { reactive, ref } from 'vue'
+import LocalCache from '@/utils/cache'
+export default {
   setup() {
     const phone = reactive({
-      tel: '',
+      tel: LocalCache.getCache('tel') ?? '',
       vCode: ''
     })
     const formRef = ref()
-    const phoneLogin = () => {
-      formRef.value.validate((valid) => {
-        if (valid) {
-          console.log('手机号登录')
+    const phoneLogin = (ischeck) => {
+      formRef.value.validate((vaild) => {
+        if (vaild) {
+          console.log(vaild)
+          if (ischeck) {
+            console.log(ischeck)
+            LocalCache.setCache('tel', phone.tel)
+          }
         }
       })
     }
@@ -38,7 +43,7 @@ export default defineComponent({
       phoneLogin
     }
   }
-})
+}
 </script>
 
 <style scoped>

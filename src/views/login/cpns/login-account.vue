@@ -1,32 +1,38 @@
 <template>
   <div class="login-account">
-    <el-form label-width="70px" :rules="rules" :model="account" ref="formRef">
+    <el-form label-width="60px" :rules="rules" :model="account" ref="formRef">
       <el-form-item label="账号" prop="name">
         <el-input v-model="account.name"></el-input>
       </el-form-item>
       <el-form-item label="密码" prop="password">
-        <el-input v-model="account.password"></el-input>
+        <el-input v-model="account.password" show-password></el-input>
       </el-form-item>
     </el-form>
   </div>
 </template>
 
 <script>
+import { reactive, ref } from 'vue'
 import { rules } from '../config/account-config'
-import { defineComponent, reactive, ref } from 'vue'
-// import { ElForm } from 'element-plus'
-export default defineComponent({
+import LocalCache from '@/utils/cache'
+import { useStore } from 'vuex'
+export default {
   setup() {
-    const account = reactive({
-      name: '',
-      password: ''
-    })
+    const store = useStore()
     const formRef = ref()
-    const accountLogin = () => {
-      formRef.value.validate((valid) => {
-        if (valid) {
-          console.log('登录在这')
-          return true
+    const account = reactive({
+      name: LocalCache.getCache('name') ?? '',
+      password: LocalCache.getCache('password') ?? ''
+    })
+    //登陆调用方法
+    const accountLogin = (ischeck) => {
+      formRef.value.validate((vaild) => {
+        if (vaild) {
+          if (ischeck) {
+            LocalCache.setCache('name', account.name)
+            LocalCache.setCache('password', account.password)
+            store.dispatch('login/accountLoginAction', { ...account })
+          }
         }
       })
     }
@@ -37,7 +43,7 @@ export default defineComponent({
       accountLogin
     }
   }
-})
+}
 </script>
 
 <style></style>

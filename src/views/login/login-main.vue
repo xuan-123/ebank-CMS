@@ -1,30 +1,29 @@
 <template>
-  <div class="login">
-    <login-panel />
+  <div class="login-main">
+    <LoginPanel />
   </div>
 </template>
-
 <script lang="ts">
-import { defineComponent } from 'vue'
 import LoginPanel from './cpns/login-panel.vue'
-export default defineComponent({
+
+export default {
   components: {
-    // eslint-disable-next-line vue/no-unused-components
     LoginPanel
   },
   setup() {
     return {}
   }
-})
+}
 </script>
 
 <style scoped lang="less">
-.login {
+.login-main {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
+  background-color: #ccc;
   background: url('../../assets/img/login-bg.svg');
 }
 </style>
